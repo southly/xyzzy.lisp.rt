@@ -1,3 +1,9 @@
+cl-rt (20030428b-1) unstable; urgency=low
+
+  * Fix dos line endings
+
+ -- Kevin M. Rosenberg <kmr@debian.org>  Tue, 11 Nov 2003 03:58:15 -0700
+
 cl-rt (20030428a-1) unstable; urgency=low
 
   * Rename package to :regression-test and add nickname of :rtest.
