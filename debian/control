@@ -9,7 +9,8 @@ Package: cl-rt
 Architecture: all
 Depends: ${shlibs:Depends}, common-lisp-controller (>= 3.37)
 Description: Common Lisp regression tester from MIT
- This is MIT's regression tester for Common Lisp programs. It provides a framework for writing
- regression tests for Common Lisp packages.
-
+ This is MIT's regression tester for Common Lisp programs. It provides a 
+ framework for writing
+ regression tests for Common Lisp packages. This package includes
+ Paul Dietz's modifications to the original MIT release.
 
