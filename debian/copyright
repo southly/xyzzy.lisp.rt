@@ -1,12 +1,9 @@
 This package was debianized by Kevin M. Rosenberg <kmr@debian.org> in
 Nov 2002.
 
-It was downloaded from http://cclan.sourceforge.net
+It was downloaded from:
+http://www-2.cs.cmu.edu/afs/cs/project/ai-repository/ai/lang/lisp/code/testing/rt/
 Upstream Author: MIT
-
-Changes compared to upstream: 
-  - Added .asd file for use with Common Lisp Controller
-  - Changed defpackage to be ompatible with AllegroCL's case-sensitive mode
 
 
 Copyright:

@@ -42,7 +42,7 @@ install: build
 	dh_clean -k
 	# Add here commands to install the package into debian/rt.
 	dh_installdirs $(clc-systems) $(clc-rt)
-	dh_install debian/rt.asd $(shell echo *.lisp) $(clc-rt)
+	dh_install debian/rt.asd rt.lisp $(clc-rt)
 	dh_link $(clc-rt)/rt.asd $(clc-systems)/rt.asd
 
 # Build architecture-independent files here.
@@ -53,7 +53,8 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installdocs
+	dh_installdocs rt-doc.txt
+	dh_installexamples rt-test.lisp
 	dh_installchangelogs
 	dh_strip
 	dh_compress

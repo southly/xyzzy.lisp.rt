@@ -1,3 +1,9 @@
+cl-rt (19901219.1-1) unstable; urgency=low
+
+  * Add examples file and documentation file (closes: 170890)
+
+ -- Kevin M. Rosenberg <kmr@debian.org>  Wed, 27 Nov 2002 11:08:06 -0700
+
 cl-rt (19901219-2) unstable; urgency=low
 
   * Remove 'load-compiled-op from .asd file
