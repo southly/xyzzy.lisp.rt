@@ -1,3 +1,11 @@
+cl-rt (20030428a-1) unstable; urgency=low
+
+  * Rename package to :regression-test and add nickname of :rtest.
+  Don't use nickname of :rt on lispworks because of conflict with the
+  Lispworks :runtime package.
+
+ -- Kevin M. Rosenberg <kmr@debian.org>  Mon, 28 Apr 2003 13:03:21 -0600
+
 cl-rt (20030428-1) unstable; urgency=low
 
   * Update with Paul Dietz's modifications (same as used by

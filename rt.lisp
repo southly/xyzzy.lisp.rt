@@ -19,14 +19,15 @@
  |  SOFTWARE.                                                                 |
  |----------------------------------------------------------------------------|#
 
-(defpackage :rt
+(defpackage #:regression-test
+  (:nicknames #:rtest #-lispworks #:rt) 
   (:use #:cl)
   (:export #:*do-tests-when-defined* #:*test* #:continue-testing
 	   #:deftest #:do-test #:do-tests #:get-test #:pending-tests
 	   #:rem-all-tests #:rem-test)
   (:documentation "The MIT regression tester with pfdietz's modifications"))
 
-(in-package :rt)
+(in-package :regression-test)
 
 (defvar *test* nil "Current test name")
 (defvar *do-tests-when-defined* nil)
