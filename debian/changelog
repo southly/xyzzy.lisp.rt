@@ -1,4 +1,4 @@
-cl-rt (2003.04.28-1) unstable; urgency=low
+cl-rt (20030428-1) unstable; urgency=low
 
   * Update with Paul Dietz's modifications (same as used by
   SBCL's sb-rt package)
