@@ -7,7 +7,7 @@
 ;;;; Programmer:    Kevin M. Rosenberg
 ;;;; Date Started:  Sep 2002
 ;;;;
-;;;; $Id: rt.asd,v 1.1 2002/11/08 08:08:29 kevin Exp $
+;;;; $Id: rt.asd,v 1.2 2002/11/08 16:51:40 kevin Exp $
 ;;;;
 ;;;; This file, part of cl-rt, is Copyright (c) 2002 by Kevin M. Rosenberg
 ;;;;
@@ -25,14 +25,9 @@
   :licence "MIT"
   :description "MIT Regression Tester"
   :long-description "RT provides a framework for writing regression test suites"
-  
   :perform (load-op :after (op rt)
 	    (pushnew :rt cl:*features*))
-  
   :components
   ((:file "rt")))
 
-(when (ignore-errors (find-class 'load-compiled-op))
-  (defmethod perform :after ((op load-compiled-op) (c (eql (find-system :rt))))
-    (pushnew :rt cl:*features*)))
 
