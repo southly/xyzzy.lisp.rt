@@ -1,0 +1,15 @@
+Source: cl-rt
+Section: devel
+Priority: optional
+Maintainer: Kevin M. Rosenberg <kmr@debian.org>
+Build-Depends-Indep: debhelper (>= 4.0.0)
+Standards-Version: 3.5.7.1
+
+Package: cl-rt
+Architecture: all
+Depends: ${shlibs:Depends}, common-lisp-controller (>= 3.37)
+Description: Common Lisp regression tester from MIT
+ This is MIT's regression tester for Common Lisp programs. It provides a framework for writing
+ regression tests for Common Lisp packages.
+
+

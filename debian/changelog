@@ -1,0 +1,5 @@
+cl-rt (19901219-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Kevin M. Rosenberg <kmr@debian.org>  Fri,  8 Nov 2002 01:08:01 -0700
