@@ -1,7 +1,5 @@
 #!/usr/bin/make -f
 
-export DH_COMPAT=4
-
 pkg	:= rt
 debpkg  := cl-rt
 
@@ -42,7 +40,7 @@ install: build
 	dh_clean -k
 	# Add here commands to install the package into debian/rt.
 	dh_installdirs $(clc-systems) $(clc-rt)
-	dh_install debian/rt.asd rt.lisp $(clc-rt)
+	dh_install rt.asd rt.lisp $(clc-rt)
 	dh_link $(clc-rt)/rt.asd $(clc-systems)/rt.asd
 
 # Build architecture-independent files here.
