@@ -1,3 +1,10 @@
+cl-rt (2003.04.28-1) unstable; urgency=low
+
+  * Update with Paul Dietz's modifications (same as used by
+  SBCL's sb-rt package)
+
+ -- Kevin M. Rosenberg <kmr@debian.org>  Mon, 28 Apr 2003 11:30:36 -0600
+
 cl-rt (19901219.1-1) unstable; urgency=low
 
   * Add examples file and documentation file (closes: 170890)

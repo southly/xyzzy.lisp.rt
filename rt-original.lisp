@@ -1,3 +1,5 @@
+;-*-syntax:COMMON-LISP;Package:(RT :use "COMMON-LISP" :colon-mode :external)-*-
+
 #|----------------------------------------------------------------------------|
  | Copyright 1990 by the Massachusetts Institute of Technology, Cambridge MA. |
  |                                                                            |
@@ -19,29 +21,20 @@
  |  SOFTWARE.                                                                 |
  |----------------------------------------------------------------------------|#
 
-(defpackage :rt
-  (:use #:cl)
-  (:export #:*do-tests-when-defined* #:*test* #:continue-testing
-	   #:deftest #:do-test #:do-tests #:get-test #:pending-tests
-	   #:rem-all-tests #:rem-test)
-  (:documentation "The MIT regression tester with pfdietz's modifications"))
-
+;This is the December 19, 1990 version of the regression tester.
+
+(defpackage #:rt
+  (:use #:common-lisp)
+  (:export deftest get-test do-test rem-test
+           rem-all-tests do-tests pending-tests
+           continue-testing *test*
+           *do-tests-when-defined*))
 (in-package :rt)
-
 (defvar *test* nil "Current test name")
 (defvar *do-tests-when-defined* nil)
 (defvar *entries* '(nil) "Test database")
 (defvar *in-test* nil "Used by TEST")
 (defvar *debug* nil "For debugging")
-(defvar *catch-errors* t
-  "When true, causes errors in a test to be caught.")
-(defvar *print-circle-on-failure* nil
-  "Failure reports are printed with *PRINT-CIRCLE* bound to this value.")
-(defvar *compile-tests* nil
-  "When true, compile the tests before running them.")
-(defvar *optimization-settings* '((safety 3)))
-(defvar *expected-failures* nil
-  "A list of test names that are expected to fail.")
 
 (defstruct (entry (:conc-name nil)
 		  (:type list))
@@ -68,7 +61,7 @@
     (when (equal (name (cadr l)) name)
       (setf (cdr l) (cddr l))
       (return name))))
-
+
 (defun get-test (&optional (name *test*))
   (defn (get-entry name)))
 
@@ -95,7 +88,7 @@
 		 (name entry))
       (setf (cadr l) entry)
       (report-error nil
-        "Redefining test ~:@(~S~)"
+        "Redefining test ~@:(~S~)"
         (name entry))
       (return nil)))
   (when *do-tests-when-defined*
@@ -108,101 +101,39 @@
 	 (if error? (throw '*debug* nil)))
 	(error? (apply #'error args))
 	(t (apply #'warn args))))
-
+
 (defun do-test (&optional (name *test*))
   (do-entry (get-entry name)))
 
-(defun equalp-with-case (x y)
-  "Like EQUALP, but doesn't do case conversion of characters."
-  (cond
-   ((eq x y) t)
-   ((consp x)
-    (and (consp y)
-	 (equalp-with-case (car x) (car y))
-	 (equalp-with-case (cdr x) (cdr y))))
-   ((and (typep x 'array)
-	 (= (array-rank x) 0))
-    (equalp-with-case (aref x) (aref y)))
-   ((typep x 'vector)
-    (and (typep y 'vector)
-	 (let ((x-len (length x))
-	       (y-len (length y)))
-	   (and (eql x-len y-len)
-		(loop
-		 for e1 across x
-		 for e2 across y
-		 always (equalp-with-case e1 e2))))))
-   ((and (typep x 'array)
-	 (typep y 'array)
-	 (not (equal (array-dimensions x)
-		     (array-dimensions y))))
-    nil)
-   ((typep x 'array)
-    (and (typep y 'array)
-	 (let ((size (array-total-size x)))
-	   (loop for i from 0 below size
-		 always (equalp-with-case (row-major-aref x i)
-					  (row-major-aref y i))))))
-   (t (eql x y))))
-
 (defun do-entry (entry &optional
-		       (s *standard-output*))
+		 (s *standard-output*))
   (catch '*in-test*
     (setq *test* (name entry))
     (setf (pend entry) t)
     (let* ((*in-test* t)
-	   ;; (*break-on-warnings* t)
-	   (aborted nil)
-	   r)
-      ;; (declare (special *break-on-warnings*))
-
-      (block aborted
-	(setf r
-	      (flet ((%do
-		      ()
-		      (if *compile-tests*
-			  (multiple-value-list
-			   (funcall (compile
-				     nil
-				     `(lambda ()
-					(declare
-					 (optimize ,@*optimization-settings*))
-					,(form entry)))))
-			(multiple-value-list
-			 (eval (form entry))))))
-		(if *catch-errors*
-		    (handler-bind
-			((style-warning #'muffle-warning)
-			 (error #'(lambda (c)
-				    (setf aborted t)
-				    (setf r (list c))
-				    (return-from aborted nil))))
-		      (%do))
-		  (%do)))))
-
+           (*break-on-warnings* t)
+	   (r (multiple-value-list
+		(eval (form entry)))))
       (setf (pend entry)
-	    (or aborted
-		(not (equalp-with-case r (vals entry)))))
-      
+	    (not (equal r (vals entry))))
       (when (pend entry)
-	(let ((*print-circle* *print-circle-on-failure*))
-	  (format s "~&Test ~:@(~S~) failed~
+	(format s "~&Test ~:@(~S~) failed~
                    ~%Form: ~S~
                    ~%Expected value~P: ~
-                      ~{~S~^~%~17t~}~%"
-		  *test* (form entry)
-		  (length (vals entry))
-		  (vals entry))
-	  (format s "Actual value~P: ~
+                      ~{~S~^~%~17t~}~
+                   ~%Actual value~P: ~
                       ~{~S~^~%~15t~}.~%"
-		  (length r) r)))))
-  (when (not (pend entry)) *test*))
+		*test* (form entry)
+		(length (vals entry))
+		(vals entry)
+		(length r) r))))
+      (when (not (pend entry)) *test*))
 
 (defun continue-testing ()
   (if *in-test*
       (throw '*in-test* nil)
       (do-entries *standard-output*)))
-
+
 (defun do-tests (&optional
 		 (out *standard-output*))
   (dolist (entry (cdr *entries*))
@@ -223,31 +154,14 @@
     (when (pend entry)
       (format s "~@[~<~%~:; ~:@(~S~)~>~]"
 	      (do-entry entry s))))
-  (let ((pending (pending-tests))
-	(expected-table (make-hash-table :test #'equal)))
-    (dolist (ex *expected-failures*)
-      (setf (gethash ex expected-table) t))
-    (let ((new-failures
-	   (loop for pend in pending
-		 unless (gethash pend expected-table)
-		 collect pend)))
-      (if (null pending)
-	  (format s "~&No tests failed.")
-	(progn
-	  (format s "~&~A out of ~A ~
+  (let ((pending (pending-tests)))
+    (if (null pending)
+	(format s "~&No tests failed.")
+	(format s "~&~A out of ~A ~
                    total tests failed: ~
                    ~:@(~{~<~%   ~1:;~S~>~
                          ~^, ~}~)."
-		  (length pending)
-		  (length (cdr *entries*))
-		  pending)
-	  (if (null new-failures)
-	      (format s "~&No unexpected failures.")
-	    (when *expected-failures*
-	      (format s "~&~A unexpected failures: ~
-                   ~:@(~{~<~%   ~1:;~S~>~
-                         ~^, ~}~)."
-		    (length new-failures)
-		    new-failures)))
-	  ))
-      (null pending))))
+		(length pending)
+		(length (cdr *entries*))
+		pending))
+    (null pending)))
