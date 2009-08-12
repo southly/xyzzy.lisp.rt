@@ -1,3 +1,42 @@
+cl-rt (20040621-4.1) unstable; urgency=low
+
+  * Non-maintainer patch sent to package Maintainer (not NMU)
+  * debian/rules
+  - Simplified rules to a minimum
+  - Now uses dh_lisp
+  - Ported to Debhelper 7
+  * debian/compat
+  - Change to version 7
+  * debian/control
+  - Add dh-lisp to Build-Depends-Indep
+  - Remove unneccesary ${shlibs:Depends}. Added ${misc:Depends}
+  - Updated standards-version (no other changes)
+  * debian/prerm, debian/postinst
+  - Removed as now taken care of by dh_lisp
+  * debian/watch
+  - New file explaining that there is no versioned upstream source
+  
+ -- Kevin M. Rosenberg <kmr@debian.org>  Wed, 12 Aug 2009 11:30:00 -0600
+
+cl-rt (20040621-3) unstable; urgency=low
+
+  * Changed to group maintanance
+  * Added Vcs-Git control field
+  * Added homepage field
+  * Updated standard version without real changes
+  * swap binary-indep and binary-arch
+  * debhelper is Build-Depends
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Sun, 24 Feb 2008 13:59:11 +0100
+
+cl-rt (20040621-2) unstable; urgency=low
+
+  * New maintainer. (Closes: #297406: O: cl-rt -- Common Lisp regression
+    tester from MIT)
+  * Adopted by Peter Van Eynde
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Tue,  1 Mar 2005 10:19:40 +0100
+
 cl-rt (20040621-1) unstable; urgency=low
 
   * New upstream from Paul Dietz's ansi-tests

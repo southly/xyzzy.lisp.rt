@@ -1,68 +1,43 @@
 #!/usr/bin/make -f
 
-pkg	:= rt
-debpkg  := cl-rt
-
+pkg		:= rt
+debpkg  	:= cl-rt
 
 clc-source	:= usr/share/common-lisp/source
-clc-systems	:= usr/share/common-lisp/systems
-clc-rt	:= $(clc-source)/$(pkg)
-
-doc-dir		:= usr/share/doc/$(debpkg)
+clc-files	:= $(clc-source)/$(pkg)
 
 
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	# Add here commands to configure the package.
-
-	touch configure-stamp
-
-
-build: build-stamp
-
-build-stamp: configure-stamp 
-	dh_testdir
-	# Add here commands to compile the package.
-	touch build-stamp
+build:
 
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
-	# Add here commands to clean up after the build process.
-	rm -f debian/cl-rt.postinst.* debian/cl-rt.prerm.*
 	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
-	# Add here commands to install the package into debian/rt.
-	dh_installdirs $(clc-systems) $(clc-rt)
-	dh_install rt.asd rt.lisp $(clc-rt)
-	dh_link $(clc-rt)/rt.asd $(clc-systems)/rt.asd
+	dh_prep
+	dh_installdirs
+	dh_install $(pkg).asd $(pkg).lisp $(clc-files)
 
-# Build architecture-independent files here.
-binary-indep: build install
+binary-arch:
 
-
-# Build architecture-dependent files here.
-binary-arch: build install
+binary-indep: install
 	dh_testdir
 	dh_testroot
 	dh_installdocs rt-doc.txt
 	dh_installexamples rt-test.lisp
 	dh_installchangelogs
-	dh_strip
+	dh_lisp
 	dh_compress
 	dh_fixperms
 	dh_installdeb
-	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
 
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
+binary: binary-indep
 
+
+.PHONY: build clean binary-indep binary-arch binary install
