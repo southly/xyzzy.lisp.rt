@@ -120,9 +120,16 @@
       (when r (return r)))))
 
 (defun pending-tests ()
+  #-xyzzy
   (loop for entry in (cdr *entries*)
         when (and (pend entry) (not (has-disabled-note entry)))
-        collect (name entry)))
+        collect (name entry))
+  #+xyzzy
+  (do ((l (cdr *entries*) (cdr l))
+       (r nil))
+      ((null l) (nreverse r))
+    (when (pend (car l))
+      (push (name (car l)) r))))
 
 (defun rem-all-tests ()
   (setq *entries* (list nil))
