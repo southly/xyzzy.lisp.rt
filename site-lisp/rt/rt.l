@@ -164,11 +164,19 @@
 (defmacro deftest (name &rest body)
   (let* ((p body)
          (properties
+          #-xyzzy
           (loop while (keywordp (first p))
                 unless (cadr p)
                 do (error "Poorly formed deftest: ~A~%"
                           (list* 'deftest name body))
-                append (list (pop p) (pop p))))
+                append (list (pop p) (pop p)))
+          #+xyzzy
+          (do ((r nil))
+              ((not (keywordp (first p))) r)
+            (unless (cadr p)
+              (error "Poorly formed deftest: ~A~%"
+                     (list* 'deftest name body)))
+            (setq r (append r (list (pop p) (pop p))))))
          (form (pop p))
          (vals p))
     `(add-entry (make-entry :pend t
