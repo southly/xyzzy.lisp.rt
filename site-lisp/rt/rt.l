@@ -21,18 +21,27 @@
  |  SOFTWARE.                                                                 |
  |----------------------------------------------------------------------------|#
 
-(defpackage #:regression-test
-  (:nicknames #:rtest #-lispworks #:rt)
-  (:use #:cl)
-  (:export #:*do-tests-when-defined* #:*test* #:continue-testing
-           #:deftest #:do-test #:do-tests #:get-test #:pending-tests
-           #:rem-all-tests #:rem-test)
-  (:documentation "The MIT regression tester with pfdietz's modifications"))
+#+xyzzy
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "loop"))
+
+(defpackage :regression-test
+  (:nicknames :rtest #-lispworks :rt)
+  (:use #+xyzzy :lisp #+xyzzy :loop #-xyzzy :cl)
+  #-xyzzy (:export :*do-tests-when-defined* :*test* :continue-testing
+           :deftest :do-test :do-tests :get-test :pending-tests
+           :rem-all-tests :rem-test)
+  #-xyzzy (:documentation "The MIT regression tester with pfdietz's modifications"))
 
 ;;This was the December 19, 1990 version of the regression tester, but
 ;;has since been modified.
 
 (in-package :regression-test)
+
+#+xyzzy
+(export '(*do-tests-when-defined* *test* continue-testing
+	  deftest do-test do-tests get-test pending-tests
+	  rem-all-tests rem-test))
 
 (declaim (ftype (function (t) t) get-entry expanded-eval do-entries))
 (declaim (type list *entries*))
