@@ -43,6 +43,10 @@
 	  deftest do-test do-tests get-test pending-tests
 	  rem-all-tests rem-test))
 
+#+xyzzy
+(defmacro the (value-type form)
+  form)
+
 (declaim (ftype (function (t) t) get-entry expanded-eval do-entries))
 (declaim (type list *entries*))
 (declaim (ftype (function (t &rest t) t) report-error))
