@@ -419,9 +419,17 @@
     (dolist (ex *expected-failures*)
       (setf (gethash ex expected-table) t))
     (let ((new-failures
+           #-xyzzy
            (loop for pend in pending
                  unless (gethash pend expected-table)
-                 collect pend)))
+                 collect pend)
+           #+xyzzy
+           (do* ((l pending (cdr l))
+                 (pend (car l) (car l))
+                 (r nil))
+               ((null l) (nreverse r))
+             (unless (gethash pend expected-table)
+               (push pend r)))))
       (if (null pending)
           (format s "~&No tests failed.")
         (progn
