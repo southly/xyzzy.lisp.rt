@@ -239,11 +239,16 @@
          (let ((x-len (length x))
                (y-len (length y)))
            (and (eql x-len y-len)
+                #-xyzzy
                 (loop
                  for i from 0 below x-len
                  for e1 = (my-aref x i)
                  for e2 = (my-aref y i)
-                 always (equalp-with-case e1 e2))))))
+                 always (equalp-with-case e1 e2))
+                #+xyzzy
+                (dotimes (i x-len t)
+                  (unless (equalp-with-case (my-aref x i) (my-aref y i))
+                    (return nil)))))))
    ((and (typep x 'array)
          (typep y 'array)
          (not (equal (array-dimensions x)
