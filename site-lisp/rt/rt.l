@@ -21,13 +21,9 @@
  |  SOFTWARE.                                                                 |
  |----------------------------------------------------------------------------|#
 
-#+xyzzy
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (require "loop"))
-
 (defpackage :regression-test
   (:nicknames :rtest #-lispworks :rt)
-  (:use #+xyzzy :lisp #+xyzzy :loop #-xyzzy :cl)
+  (:use #+xyzzy :lisp #-xyzzy :cl)
   #-xyzzy (:export :*do-tests-when-defined* :*test* :continue-testing
            :deftest :do-test :do-tests :get-test :pending-tests
            :rem-all-tests :rem-test)
