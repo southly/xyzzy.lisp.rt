@@ -104,10 +104,20 @@
 
 (defun has-disabled-note (entry)
   (let ((notes (entry-notes entry)))
+    #-xyzzy
     (loop for n in notes
           for note = (if (note-p n) n
                        (gethash n *notes*))
-          thereis (and note (note-disabled note)))))
+          thereis (and note (note-disabled note)))
+    #+xyzzy
+    (do* ((l (cdr notes) (cdr l))
+          (n (car l) (car l))
+          (note (if (note-p n) n (gethash n *notes*))
+                (if (note-p n) n (gethash n *notes*)))
+          (r nil))
+        ((null l) nil)
+      (setq r (and note (note-disabled note)))
+      (when r (return r)))))
 
 (defun pending-tests ()
   (loop for entry in (cdr *entries*)
