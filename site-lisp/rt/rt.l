@@ -342,8 +342,13 @@
    (let ((op (car form)))
      (cond
       ((eq op 'let)
-       (let* ((bindings (loop for b in (cadr form)
-                              collect (if (consp b) b (list b nil))))
+       (let* ((bindings #-xyzzy (loop for b in (cadr form)
+                                      collect (if (consp b) b (list b nil)))
+                        #+xyzzy (do* ((l (cadr form) (cdr l))
+                                      (b (car l) (car l))
+                                      (r nil))
+                                    ((null l) (nreverse r))
+                                  (push (if (consp b) b (list b nil)) r)))
               (vars (mapcar #'car bindings))
               (binding-forms (mapcar #'cadr bindings)))
          (apply
