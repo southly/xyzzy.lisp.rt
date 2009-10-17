@@ -370,9 +370,15 @@
             (eval `(lambda (,(car vars) &aux ,@(cdr bindings)) ,@(cddr form))))
           (eval (car binding-forms)))))
       ((eq op 'progn)
+       #-xyzzy
        (loop for e on (cdr form)
              do (if (null (cdr e)) (return (eval (car e)))
-                  (eval (car e)))))
+                  (eval (car e))))
+       #+xyzzy
+       (do ((e (cdr form) (cdr e)))
+           ((null e))
+         (if (null (cdr e)) (return (eval (car e)))
+           (eval (car e)))))
       ((and (symbolp op) (fboundp op)
             (not (macro-function op))
             (not (special-operator-p op)))
