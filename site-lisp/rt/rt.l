@@ -358,7 +358,7 @@
   (dolist (entry (cdr *entries*))
     (when (and (pend entry)
                (not (has-disabled-note entry)))
-      (format s "~@[~<~%~:; ~:@(~S~)~>~]"
+      (format s #-xyzzy "~@[~<~%~:; ~:@(~S~)~>~]" #+xyzzy "~@[~% ~:@(~S~)~]"
               (do-entry entry s))
       (finish-output s)
       ))
@@ -373,9 +373,13 @@
       (if (null pending)
           (format s "~&No tests failed.")
         (progn
-          (format s "~&~A out of ~A ~
+          (format s #-xyzzy "~&~A out of ~A ~
                    total tests failed: ~
                    ~:@(~{~<~%   ~1:;~S~>~
+                         ~^, ~}~)."
+                    #+xyzzy "~&~A out of ~A ~
+                   total tests failed: ~
+                   ~:@(~{~%   ~S~
                          ~^, ~}~)."
                   (length pending)
                   (length (cdr *entries*))
@@ -383,8 +387,11 @@
           (if (null new-failures)
               (format s "~&No unexpected failures.")
             (when *expected-failures*
-              (format s "~&~A unexpected failures: ~
+              (format s #-xyzzy "~&~A unexpected failures: ~
                    ~:@(~{~<~%   ~1:;~S~>~
+                         ~^, ~}~)."
+                        #+xyzzy "~&~A unexpected failures: ~
+                   ~:@(~{~%   ~S~
                          ~^, ~}~)."
                     (length new-failures)
                     new-failures)))
