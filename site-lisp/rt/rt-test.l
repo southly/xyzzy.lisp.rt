@@ -25,8 +25,8 @@
 ;RT regression tester to test itself.  See the documentation of RT for
 ;a discusion of how to use this file.
 
-(in-package :cl-user)
-(require :rt)
+(in-package #-xyzzy :cl-user #+xyzzy :user)
+(require #-xyzzy :rt #+xyzzy "rt/rt")
 (use-package :rt)
 
 (defmacro setup (&rest body)
@@ -59,7 +59,7 @@
   (loop (if *file-name* (return *file-name*))
         (format *error-output*
                 "~%Type a string representing naming of a scratch disk file: ")
-        (setq *file-name* (read))
+        (setq *file-name* #-xyzzy (read) #+xyzzy (ed:read-file-name "File: "))
         (if (not (stringp *file-name*)) (setq *file-name* nil))))
 
 (get-file-name)
