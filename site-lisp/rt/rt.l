@@ -266,7 +266,7 @@
                          (eval (form entry)))))))
                 (if *catch-errors*
                     (handler-bind
-                     (#-ecl (style-warning #'muffle-warning)
+                     (#-(or xyzzy ecl) (style-warning #'muffle-warning)
                             (error #'(lambda (c)
                                        (setf aborted t)
                                        (setf r (list c))
