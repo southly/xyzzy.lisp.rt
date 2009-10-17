@@ -258,9 +258,15 @@
    ((typep x 'array)
     (and (typep y 'array)
          (let ((size (array-total-size x)))
+           #-xyzzy
            (loop for i from 0 below size
                  always (equalp-with-case (my-row-major-aref x i)
-                                          (my-row-major-aref y i))))))
+                                          (my-row-major-aref y i)))
+           #+xyzzy
+           (dotimes (i size t)
+             (unless (equalp-with-case (my-row-major-aref x i)
+                                       (my-row-major-aref y i))
+               (return nil))))))
 
    (t (eql x y))))
 
